@@ -1,55 +1,5 @@
 import streamlit as st
-
-st.set_page_config(
-    page_title="Adaptive Traffic Signal Control System",
-    page_icon="🚦",
-    layout="centered"
-)
-
-if "logged_in" not in st.session_state:
-    st.session_state.logged_in = False
-
-if not st.session_state.logged_in:
-
-    st.markdown(
-        """
-        <div style="
-            text-align: center;
-            margin-top: 80px;
-            margin-bottom: 30px;
-        ">
-            <div style="font-size: 90px;">
-                🚦
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-    username = st.text_input(
-        "Username",
-        placeholder="Enter username"
-    )
-
-    password = st.text_input(
-        "Password",
-        type="password",
-        placeholder="Enter password"
-    )
-
-    if st.button("LOGIN", use_container_width=True):
-
-        if username == "admin" and password == "traffic123":
-            st.session_state.logged_in = True
-            st.rerun()
-        else:
-            st.error("Invalid username or password")
-
-    st.stop()
-
-# =====================================================
-# DASHBOARD AFTER LOGIN
-# =====================================================
+import base64
 
 st.set_page_config(
     page_title="Adaptive Traffic Signal Control System",
@@ -57,29 +7,197 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("🚦 Adaptive Traffic Signal Control System")
+# =====================================================
+# LOGIN STATE
+# =====================================================
+
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+
+
+# =====================================================
+# BACKGROUND IMAGE
+# =====================================================
+
+def get_base64_image(path):
+
+    with open(path, "rb") as file:
+        return base64.b64encode(
+            file.read()
+        ).decode()
+
+
+bg_image = get_base64_image("login_bg.png")
+
+
+# =====================================================
+# LOGIN PAGE
+# =====================================================
+
+if not st.session_state.logged_in:
+
+    st.markdown(
+        f"""
+        <style>
+
+        .stApp {{
+            background-image:
+                url("data:image/png;base64,{bg_image}");
+
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+        }}
+
+        [data-testid="stHeader"] {{
+            background: transparent;
+        }}
+
+        .login-box {{
+            background: rgba(255,255,255,0.96);
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0px 8px 30px rgba(0,0,0,0.15);
+            margin-top: 180px;
+        }}
+
+        .project-title {{
+            text-align: center;
+            font-size: 38px;
+            font-weight: 700;
+            color: #17324d;
+            margin-top: 50px;
+        }}
+
+        .subtitle {{
+            text-align: center;
+            font-size: 18px;
+            color: #5b6b7c;
+        }}
+
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # Space for the logo/title area in the image
+    st.markdown(
+        """
+        <div class="project-title">
+            Adaptive Traffic Signal Control System
+        </div>
+
+        <div class="subtitle">
+            Smart Traffic Control for Smarter Cities
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.write("")
+
+    # Center login form
+    left, center, right = st.columns(
+        [1, 2, 1]
+    )
+
+    with center:
+
+        st.markdown(
+            '<div class="login-box">',
+            unsafe_allow_html=True
+        )
+
+        username = st.text_input(
+            "Username",
+            placeholder="Enter your username"
+        )
+
+        password = st.text_input(
+            "Password",
+            type="password",
+            placeholder="Enter your password"
+        )
+
+        login = st.button(
+            "Login",
+            use_container_width=True
+        )
+
+        st.markdown(
+            """
+            <div style="
+                text-align:center;
+                margin-top:20px;
+                color:#5b6b7c;
+            ">
+                👥 Smart Signals. Smooth Traffic. Safer Roads.
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+        st.markdown(
+            '</div>',
+            unsafe_allow_html=True
+        )
+
+        if login:
+
+            if (
+                username == "admin"
+                and password == "traffic123"
+            ):
+
+                st.session_state.logged_in = True
+                st.rerun()
+
+            else:
+
+                st.error(
+                    "Invalid username or password"
+                )
+
+    st.stop()
+
+
+# =====================================================
+# DASHBOARD
+# =====================================================
+
+st.title(
+    "🚦 Adaptive Traffic Signal Control System"
+)
 
 if st.button("Logout"):
+
     st.session_state.logged_in = False
     st.rerun()
 
+
 st.markdown("---")
 
-# Video Upload
-st.header("🎥 Traffic Video")
+st.header("🎥 Traffic Analysis")
 
 uploaded_video = st.file_uploader(
     "Upload Traffic Video",
-    type=["mp4", "mov", "avi"]
+    type=["mp4", "avi", "mov"]
 )
 
 if uploaded_video:
-    st.success("Video uploaded successfully!")
+
+    st.success(
+        "Traffic video uploaded successfully!"
+    )
+
     st.video(uploaded_video)
+
 
 st.markdown("---")
 
-# Traffic Counts
+st.header("📊 Four-Way Traffic Status")
+
 traffic = {
     "NORTH": 3,
     "EAST": 4,
@@ -87,54 +205,78 @@ traffic = {
     "WEST": 2
 }
 
-def density(count):
-    if count <= 2:
-        return "LOW"
-    elif count <= 4:
-        return "MEDIUM"
-    else:
-        return "HIGH"
+green_times = {
+    "NORTH": 20,
+    "EAST": 30,
+    "SOUTH": 45,
+    "WEST": 10
+}
 
-def green_time(count):
-    if count <= 2:
-        return 20
-    elif count <= 4:
-        return 30
-    else:
-        return 45
+priority = max(
+    traffic,
+    key=traffic.get
+)
 
-priority = max(traffic, key=traffic.get)
+signal_order = sorted(
+    traffic,
+    key=traffic.get,
+    reverse=True
+)
 
-# Traffic Analysis
-st.header("📊 Traffic Analysis")
+waiting = {}
+total = {}
 
-col1, col2, col3, col4 = st.columns(4)
+current_wait = 0
 
-for col, side in zip(
-    [col1, col2, col3, col4],
+for direction in signal_order:
+
+    waiting[direction] = current_wait
+
+    total[direction] = (
+        current_wait
+        + green_times[direction]
+    )
+
+    current_wait += green_times[direction]
+
+
+cols = st.columns(4)
+
+for col, direction in zip(
+    cols,
     ["NORTH", "EAST", "SOUTH", "WEST"]
 ):
+
     with col:
-        st.metric(
-            side,
-            f"{traffic[side]} vehicles"
+
+        st.subheader(direction)
+
+        st.write(
+            f"**Vehicles:** "
+            f"{traffic[direction]}"
         )
 
         st.write(
-            f"Density: **{density(traffic[side])}**"
+            f"**Green Signal:** "
+            f"{green_times[direction]} sec"
         )
 
         st.write(
-            f"Green Signal: **{green_time(traffic[side])} sec**"
+            f"**Waiting Time:** "
+            f"{waiting[direction]} sec"
         )
 
-# Smart Signal
+        st.write(
+            f"**Total Time:** "
+            f"{total[direction]} sec"
+        )
+
+
 st.markdown("---")
 
-st.header("🚦 Smart Signal Decision")
-
 st.success(
-    f"Priority: {priority} | "
+    f"🚦 Priority: {priority} | "
     f"Vehicles: {traffic[priority]} | "
-    f"Green Signal: {green_time(traffic[priority])} seconds"
+    f"Green Signal: "
+    f"{green_times[priority]} seconds"
 )
