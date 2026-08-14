@@ -6,26 +6,58 @@ st.set_page_config(
     layout="wide"
 )
 
+# ---------------- LOGIN ----------------
+
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+
+if not st.session_state.logged_in:
+
+    st.title("🚦 Smart Traffic AI")
+    st.subheader("Login")
+
+    username = st.text_input("Username")
+    password = st.text_input(
+        "Password",
+        type="password"
+    )
+
+    if st.button("Login"):
+
+        # Demo credentials
+        if username == "admin" and password == "traffic123":
+            st.session_state.logged_in = True
+            st.rerun()
+        else:
+            st.error("❌ Invalid username or password")
+
+    st.info("Demo Username: admin")
+
+    st.stop()
+
+
+# ---------------- DASHBOARD ----------------
+
 st.title("🚦 Smart Traffic AI")
 st.subheader("AI-Based Four-Way Traffic Management System")
 
+if st.button("Logout"):
+    st.session_state.logged_in = False
+    st.rerun()
+
 st.markdown("---")
 
-# Video upload
 uploaded_video = st.file_uploader(
     "🎥 Upload Traffic Video",
     type=["mp4", "mov", "avi"]
 )
 
-if uploaded_video is not None:
-
+if uploaded_video:
     st.success("✅ Video uploaded successfully!")
-
     st.video(uploaded_video)
 
-    st.markdown("---")
+st.markdown("---")
 
-# Traffic data
 traffic = {
     "NORTH": 3,
     "EAST": 4,
@@ -38,16 +70,14 @@ def density(count):
         return "LOW"
     elif count <= 4:
         return "MEDIUM"
-    else:
-        return "HIGH"
+    return "HIGH"
 
 def green_time(count):
     if count <= 2:
         return 20
     elif count <= 4:
         return 30
-    else:
-        return 45
+    return 45
 
 priority = max(traffic, key=traffic.get)
 
@@ -64,11 +94,9 @@ for col, side in zip(
             side,
             f"{traffic[side]} vehicles"
         )
-
         st.write(
             f"Density: **{density(traffic[side])}**"
         )
-
         st.write(
             f"Green: **{green_time(traffic[side])} sec**"
         )
@@ -81,14 +109,4 @@ st.success(
     f"Priority: {priority} | "
     f"Vehicles: {traffic[priority]} | "
     f"Green Signal: {green_time(traffic[priority])} seconds"
-)
-
-st.info(
-    "Higher traffic density receives a longer green signal."
-)
-
-st.markdown("---")
-
-st.caption(
-    "Smart Traffic AI — Four-Way Traffic Management Prototype"
 )
