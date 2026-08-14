@@ -1,4 +1,5 @@
 import streamlit as st
+import base64
 
 # =========================================================
 # PAGE CONFIG
@@ -10,7 +11,6 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="collapsed"
 )
-
 
 # =========================================================
 # LOGIN STATE
@@ -26,109 +26,99 @@ if "logged_in" not in st.session_state:
 
 if not st.session_state.logged_in:
 
-    # Hide Streamlit default elements
+    # -----------------------------------------------------
+    # LOAD BACKGROUND IMAGE
+    # -----------------------------------------------------
+
+    try:
+        with open("login_background.png", "rb") as f:
+            image_data = base64.b64encode(
+                f.read()
+            ).decode()
+
+        background = (
+            f"data:image/png;base64,{image_data}"
+        )
+
+    except:
+        background = ""
+
+
+    # -----------------------------------------------------
+    # CSS
+    # -----------------------------------------------------
+
     st.markdown(
-        """
+        f"""
         <style>
 
-        #MainMenu {
+        /* Hide Streamlit UI */
+        #MainMenu {{
             visibility: hidden;
-        }
+        }}
 
-        header {
+        header {{
             visibility: hidden;
-        }
+        }}
 
-        footer {
+        footer {{
             visibility: hidden;
-        }
+        }}
 
-        .stApp {
-            background: #eef5f8;
-        }
-
-        /* Remove top spacing */
-        .block-container {
-            padding-top: 0rem !important;
-            padding-bottom: 0rem !important;
-            max-width: 100% !important;
-        }
-
-        /* Background image */
-        .login-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-
+        .stApp {{
             background-image:
-                linear-gradient(
-                    rgba(255,255,255,0.08),
-                    rgba(255,255,255,0.08)
-                ),
-                url("login_background.png");
+                url("{background}");
 
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
+            background-attachment: fixed;
+        }}
+
+        .block-container {{
+            padding-top: 0rem !important;
+            padding-bottom: 0rem !important;
+            max-width: 100% !important;
+        }}
+
+        /* Dark/light overlay */
+        .stApp::before {{
+            content: "";
+            position: fixed;
+            inset: 0;
+
+            background: rgba(
+                255,
+                255,
+                255,
+                0.20
+            );
 
             z-index: 0;
-        }
+            pointer-events: none;
+        }}
 
-        /* Login card */
-        .login-card {
+        /* Main content */
+        .main-content {{
             position: relative;
-            z-index: 5;
+            z-index: 2;
+        }}
 
-            width: 520px;
-            max-width: 90vw;
-
-            margin: 170px auto 0 auto;
-
-            padding: 35px 38px 28px 38px;
-
-            background: rgba(255,255,255,0.96);
-
-            border-radius: 20px;
-
-            box-shadow:
-                0 10px 35px rgba(0,0,0,0.18);
-
-            text-align: left;
-        }
-
-        /* Project title */
-        .project-title {
-            position: relative;
-            z-index: 5;
-
+        /* Title */
+        .project-title {{
             text-align: center;
 
-            margin-top: 45px;
-
-            font-size: 43px;
+            font-size: 42px;
             font-weight: 700;
 
             color: #183047;
 
+            margin-top: 45px;
+
             letter-spacing: 1px;
-        }
+        }}
 
-        .project-subtitle {
-            position: relative;
-            z-index: 5;
-
-            text-align: center;
-
-            margin-top: 15px;
-
-            font-size: 20px;
-
-            color: #526276;
-        }
-
-        .title-line {
+        .title-line {{
             width: 70px;
             height: 4px;
 
@@ -137,25 +127,60 @@ if not st.session_state.logged_in:
             margin: 18px auto;
 
             border-radius: 10px;
-        }
+        }}
 
-        /* Input labels */
-        label {
-            font-weight: 600 !important;
+        .project-subtitle {{
+            text-align: center;
+
+            font-size: 20px;
+
+            color: #526276;
+
+            margin-bottom: 35px;
+        }}
+
+        /* Login area */
+        .login-box {{
+            width: 520px;
+
+            max-width: 90%;
+
+            margin: 0 auto;
+
+            padding: 28px 38px 25px 38px;
+
+            background: rgba(
+                255,
+                255,
+                255,
+                0.96
+            );
+
+            border-radius: 20px;
+
+            box-shadow:
+                0 10px 35px
+                rgba(0,0,0,0.20);
+        }}
+
+        /* Labels */
+        label {{
             color: #172b40 !important;
-        }
+            font-weight: 600 !important;
+        }}
 
-        /* Text boxes */
-        div[data-baseweb="input"] {
+        /* Inputs */
+        div[data-baseweb="input"] {{
             border-radius: 10px !important;
-        }
+            background: white !important;
+        }}
 
-        div[data-baseweb="input"] input {
+        div[data-baseweb="input"] input {{
             font-size: 17px !important;
-        }
+        }}
 
         /* Login button */
-        .stButton > button {
+        .stButton > button {{
             width: 100%;
 
             height: 52px;
@@ -173,23 +198,23 @@ if not st.session_state.logged_in:
             font-weight: 600;
 
             margin-top: 12px;
-        }
+        }}
 
-        .stButton > button:hover {
+        .stButton > button:hover {{
             background: #188951;
             color: white;
-        }
+        }}
 
-        /* Bottom message */
-        .login-footer {
+        /* Bottom text */
+        .login-footer {{
             text-align: center;
 
-            margin-top: 25px;
-
-            color: #526276;
+            margin-top: 20px;
 
             font-size: 16px;
-        }
+
+            color: #526276;
+        }}
 
         </style>
         """,
@@ -198,18 +223,17 @@ if not st.session_state.logged_in:
 
 
     # =====================================================
-    # BACKGROUND
+    # MAIN CONTENT
     # =====================================================
 
     st.markdown(
-        '<div class="login-background"></div>',
+        '<div class="main-content">',
         unsafe_allow_html=True
     )
 
-
-    # =====================================================
-    # PROJECT TITLE
-    # =====================================================
+    # -----------------------------------------------------
+    # TITLE
+    # -----------------------------------------------------
 
     st.markdown(
         """
@@ -228,57 +252,68 @@ if not st.session_state.logged_in:
 
 
     # =====================================================
-    # LOGIN CARD
+    # LOGIN BOX
     # =====================================================
 
-    st.markdown(
-        '<div class="login-card">',
-        unsafe_allow_html=True
+    # Use columns to create a centered login area
+    left, center, right = st.columns(
+        [1, 2, 1]
     )
 
-    username = st.text_input(
-        "Username",
-        placeholder="Enter your username",
-        key="username"
-    )
+    with center:
 
-    password = st.text_input(
-        "Password",
-        placeholder="Enter your password",
-        type="password",
-        key="password"
-    )
+        st.markdown(
+            '<div class="login-box">',
+            unsafe_allow_html=True
+        )
 
-    login_button = st.button(
-        "Login",
-        use_container_width=True
-    )
+        username = st.text_input(
+            "Username",
+            placeholder="Enter your username"
+        )
 
-    if login_button:
+        password = st.text_input(
+            "Password",
+            placeholder="Enter your password",
+            type="password"
+        )
 
-        if (
-            username == "admin"
-            and password == "traffic123"
-        ):
+        login = st.button(
+            "Login",
+            use_container_width=True
+        )
 
-            st.session_state.logged_in = True
+        if login:
 
-            st.rerun()
+            if (
+                username == "admin"
+                and password == "traffic123"
+            ):
 
-        else:
+                st.session_state.logged_in = True
 
-            st.error(
-                "Invalid username or password"
-            )
+                st.rerun()
 
-    st.markdown(
-        """
-        <div class="login-footer">
-            👥 Smart Signals. Smooth Traffic. Safer Roads.
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+            else:
+
+                st.error(
+                    "Invalid username or password"
+                )
+
+        st.markdown(
+            """
+            <div class="login-footer">
+                👥 Smart Signals. Smooth Traffic. Safer Roads.
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+        st.markdown(
+            '</div>',
+            unsafe_allow_html=True
+        )
+
 
     st.markdown(
         '</div>',
@@ -289,10 +324,12 @@ if not st.session_state.logged_in:
 
 
 # =========================================================
-# DASHBOARD
+# AFTER LOGIN
 # =========================================================
 
-st.title("🚦 Adaptive Traffic Signal Control System")
+st.title(
+    "🚦 Adaptive Traffic Signal Control System"
+)
 
 if st.button("Logout"):
 
@@ -312,7 +349,9 @@ uploaded_video = st.file_uploader(
 
 if uploaded_video:
 
-    st.success("Video uploaded successfully!")
+    st.success(
+        "Video uploaded successfully!"
+    )
 
     st.video(uploaded_video)
 
@@ -336,17 +375,13 @@ green_times = {
 }
 
 # Highest traffic gets priority
-priority = max(
-    traffic,
-    key=traffic.get
-)
-
-# Priority gets zero waiting time
 signal_order = sorted(
     traffic,
     key=traffic.get,
     reverse=True
 )
+
+priority = signal_order[0]
 
 waiting_times = {}
 total_times = {}
