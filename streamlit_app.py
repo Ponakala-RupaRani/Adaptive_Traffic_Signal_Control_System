@@ -36,19 +36,15 @@ st.markdown(
         margin-bottom: 25px;
     }
 
-    /* Login button */
+    /* All buttons */
     div.stButton > button {
-        width: 100%;
-        height: 50px;
-
         background-color: #20a464;
         color: white;
-
         border: none;
         border-radius: 8px;
-
         font-size: 18px;
         font-weight: 600;
+        height: 50px;
     }
 
     div.stButton > button:hover {
@@ -56,7 +52,7 @@ st.markdown(
         color: white;
     }
 
-    /* Labels */
+    /* Username and password labels */
     label {
         color: white !important;
     }
@@ -78,15 +74,6 @@ st.markdown(
     /* Password eye icon */
     div[data-baseweb="input"] svg {
         color: white !important;
-    }
-
-    /* Forgot password */
-    .forgot-text {
-        text-align: right;
-        color: #20a464;
-        font-size: 14px;
-        margin-top: -5px;
-        margin-bottom: 12px;
     }
 
     /* Footer */
@@ -181,23 +168,22 @@ if not st.session_state.logged_in:
 
 
     # -------------------------------------------------
-    # FORGOT PASSWORD
+    # SMALL FORGOT PASSWORD BUTTON
     # -------------------------------------------------
 
-    st.markdown(
-        """
-        <div class="forgot-text">
-            Forgot Password?
-        </div>
-        """,
-        unsafe_allow_html=True
+    forgot_col1, forgot_col2 = st.columns(
+        [4, 1]
     )
 
-    forgot = st.button(
-        "Forgot Password?"
-    )
+    with forgot_col2:
+
+        forgot = st.button(
+            "Forgot Password?"
+        )
+
 
     if forgot:
+
         st.info(
             "Please contact the system administrator "
             "to reset your password."
@@ -205,7 +191,7 @@ if not st.session_state.logged_in:
 
 
     # -------------------------------------------------
-    # LOGIN
+    # LOGIN BUTTON
     # -------------------------------------------------
 
     if st.button(
