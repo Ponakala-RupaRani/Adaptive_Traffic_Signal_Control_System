@@ -1,5 +1,8 @@
 import streamlit as st
-import base64
+
+# =========================================================
+# PAGE CONFIG
+# =========================================================
 
 st.set_page_config(
     page_title="Adaptive Traffic Signal Control System",
@@ -7,6 +10,7 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="collapsed"
 )
+
 
 # =========================================================
 # LOGIN STATE
@@ -17,116 +21,218 @@ if "logged_in" not in st.session_state:
 
 
 # =========================================================
-# LOAD LOGIN BACKGROUND
-# =========================================================
-
-def load_image(path):
-    with open(path, "rb") as f:
-        return base64.b64encode(f.read()).decode()
-
-
-bg = load_image("login_bg.png")
-
-
-# =========================================================
 # LOGIN PAGE
 # =========================================================
 
 if not st.session_state.logged_in:
 
+    # Hide Streamlit default elements
     st.markdown(
-        f"""
+        """
         <style>
 
-        /* Remove Streamlit default spacing */
-        .block-container {{
+        #MainMenu {
+            visibility: hidden;
+        }
+
+        header {
+            visibility: hidden;
+        }
+
+        footer {
+            visibility: hidden;
+        }
+
+        .stApp {
+            background: #eef5f8;
+        }
+
+        /* Remove top spacing */
+        .block-container {
             padding-top: 0rem !important;
             padding-bottom: 0rem !important;
             max-width: 100% !important;
-        }}
+        }
 
-        [data-testid="stHeader"] {{
-            display: none;
-        }}
+        /* Background image */
+        .login-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
 
-        /* Full background */
-        .stApp {{
-            background-image: url(
-                "data:image/png;base64,{bg}"
-            );
+            background-image:
+                linear-gradient(
+                    rgba(255,255,255,0.08),
+                    rgba(255,255,255,0.08)
+                ),
+                url("login_background.png");
 
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
 
-            min-height: 100vh;
-        }}
+            z-index: 0;
+        }
 
-        /* White cover over the ORIGINAL form in image */
-        .login-cover {{
-            position: fixed;
-            top: 48%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+        /* Login card */
+        .login-card {
+            position: relative;
+            z-index: 5;
 
-            width: 500px;
-            height: 390px;
+            width: 520px;
+            max-width: 90vw;
 
-            background: rgba(255,255,255,0.98);
+            margin: 170px auto 0 auto;
 
-            border-radius: 22px;
+            padding: 35px 38px 28px 38px;
+
+            background: rgba(255,255,255,0.96);
+
+            border-radius: 20px;
 
             box-shadow:
-                0px 10px 35px
-                rgba(0,0,0,0.18);
+                0 10px 35px rgba(0,0,0,0.18);
 
-            z-index: 1;
-        }}
+            text-align: left;
+        }
 
-        /* Real Streamlit form */
-        .login-content {{
-            position: fixed;
-            top: 48%;
-            left: 50%;
+        /* Project title */
+        .project-title {
+            position: relative;
+            z-index: 5;
 
-            transform: translate(-50%, -50%);
-
-            width: 430px;
-
-            z-index: 10;
-        }}
-
-        .login-heading {{
             text-align: center;
-            font-size: 27px;
+
+            margin-top: 45px;
+
+            font-size: 43px;
             font-weight: 700;
-            color: #17324d;
-            margin-bottom: 20px;
-        }}
+
+            color: #183047;
+
+            letter-spacing: 1px;
+        }
+
+        .project-subtitle {
+            position: relative;
+            z-index: 5;
+
+            text-align: center;
+
+            margin-top: 15px;
+
+            font-size: 20px;
+
+            color: #526276;
+        }
+
+        .title-line {
+            width: 70px;
+            height: 4px;
+
+            background: #20a464;
+
+            margin: 18px auto;
+
+            border-radius: 10px;
+        }
+
+        /* Input labels */
+        label {
+            font-weight: 600 !important;
+            color: #172b40 !important;
+        }
+
+        /* Text boxes */
+        div[data-baseweb="input"] {
+            border-radius: 10px !important;
+        }
+
+        div[data-baseweb="input"] input {
+            font-size: 17px !important;
+        }
+
+        /* Login button */
+        .stButton > button {
+            width: 100%;
+
+            height: 52px;
+
+            background: #20a464;
+
+            color: white;
+
+            border: none;
+
+            border-radius: 9px;
+
+            font-size: 19px;
+
+            font-weight: 600;
+
+            margin-top: 12px;
+        }
+
+        .stButton > button:hover {
+            background: #188951;
+            color: white;
+        }
+
+        /* Bottom message */
+        .login-footer {
+            text-align: center;
+
+            margin-top: 25px;
+
+            color: #526276;
+
+            font-size: 16px;
+        }
 
         </style>
-
-        <div class="login-cover"></div>
         """,
         unsafe_allow_html=True
     )
 
 
     # =====================================================
-    # REAL LOGIN FORM
+    # BACKGROUND
     # =====================================================
 
     st.markdown(
-        '<div class="login-content">',
+        '<div class="login-background"></div>',
         unsafe_allow_html=True
     )
+
+
+    # =====================================================
+    # PROJECT TITLE
+    # =====================================================
 
     st.markdown(
         """
-        <div class="login-heading">
-            Login
+        <div class="project-title">
+            Adaptive Traffic Signal Control System
+        </div>
+
+        <div class="title-line"></div>
+
+        <div class="project-subtitle">
+            Smart Traffic Control for Smarter Cities
         </div>
         """,
+        unsafe_allow_html=True
+    )
+
+
+    # =====================================================
+    # LOGIN CARD
+    # =====================================================
+
+    st.markdown(
+        '<div class="login-card">',
         unsafe_allow_html=True
     )
 
@@ -138,8 +244,8 @@ if not st.session_state.logged_in:
 
     password = st.text_input(
         "Password",
-        type="password",
         placeholder="Enter your password",
+        type="password",
         key="password"
     )
 
@@ -148,15 +254,27 @@ if not st.session_state.logged_in:
         use_container_width=True
     )
 
+    if login_button:
+
+        if (
+            username == "admin"
+            and password == "traffic123"
+        ):
+
+            st.session_state.logged_in = True
+
+            st.rerun()
+
+        else:
+
+            st.error(
+                "Invalid username or password"
+            )
+
     st.markdown(
         """
-        <div style="
-            text-align:center;
-            margin-top:18px;
-            color:#5b6b7c;
-            font-size:15px;
-        ">
-            🚦 Smart Signals. Smooth Traffic. Safer Roads.
+        <div class="login-footer">
+            👥 Smart Signals. Smooth Traffic. Safer Roads.
         </div>
         """,
         unsafe_allow_html=True
@@ -167,70 +285,41 @@ if not st.session_state.logged_in:
         unsafe_allow_html=True
     )
 
-
-    # =====================================================
-    # LOGIN CHECK
-    # =====================================================
-
-    if login_button:
-
-        if (
-            username == "admin"
-            and password == "traffic123"
-        ):
-
-            st.session_state.logged_in = True
-            st.rerun()
-
-        else:
-
-            st.error(
-                "Invalid username or password"
-            )
-
     st.stop()
 
 
 # =========================================================
-# DASHBOARD AFTER LOGIN
+# DASHBOARD
 # =========================================================
 
-st.title(
-    "🚦 Adaptive Traffic Signal Control System"
-)
+st.title("🚦 Adaptive Traffic Signal Control System")
 
 if st.button("Logout"):
 
     st.session_state.logged_in = False
+
     st.rerun()
 
 
 st.markdown("---")
 
-st.header("🎥 Traffic Analysis")
+st.header("🎥 Traffic Video")
 
 uploaded_video = st.file_uploader(
     "Upload Traffic Video",
-    type=["mp4", "avi", "mov"]
+    type=["mp4", "mov", "avi"]
 )
 
 if uploaded_video:
 
-    st.success(
-        "Traffic video uploaded successfully!"
-    )
+    st.success("Video uploaded successfully!")
 
     st.video(uploaded_video)
 
 
 st.markdown("---")
 
-st.header("📊 Four-Way Traffic Status")
-
-
-# =========================================================
-# DEMO VALUES
-# =========================================================
+st.header("📊 Traffic Analysis")
 
 traffic = {
     "NORTH": 3,
@@ -246,46 +335,34 @@ green_times = {
     "WEST": 10
 }
 
-
-# Highest traffic gets first priority
-
+# Highest traffic gets priority
 priority = max(
     traffic,
     key=traffic.get
 )
 
-
+# Priority gets zero waiting time
 signal_order = sorted(
     traffic,
     key=traffic.get,
     reverse=True
 )
 
+waiting_times = {}
+total_times = {}
 
-# =========================================================
-# WAITING TIME
-# =========================================================
-
-waiting = {}
-total = {}
-
-current_wait = 0
+wait = 0
 
 for direction in signal_order:
 
-    waiting[direction] = current_wait
+    waiting_times[direction] = wait
 
-    total[direction] = (
-        current_wait
-        + green_times[direction]
+    total_times[direction] = (
+        wait + green_times[direction]
     )
 
-    current_wait += green_times[direction]
+    wait += green_times[direction]
 
-
-# =========================================================
-# DISPLAY
-# =========================================================
 
 cols = st.columns(4)
 
@@ -310,12 +387,12 @@ for col, direction in zip(
 
         st.write(
             f"**Waiting Time:** "
-            f"{waiting[direction]} sec"
+            f"{waiting_times[direction]} sec"
         )
 
         st.write(
             f"**Total Time:** "
-            f"{total[direction]} sec"
+            f"{total_times[direction]} sec"
         )
 
 
