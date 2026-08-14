@@ -11,7 +11,21 @@ st.subheader("AI-Based Four-Way Traffic Management System")
 
 st.markdown("---")
 
-# Demo traffic counts
+# Video upload
+uploaded_video = st.file_uploader(
+    "🎥 Upload Traffic Video",
+    type=["mp4", "mov", "avi"]
+)
+
+if uploaded_video is not None:
+
+    st.success("✅ Video uploaded successfully!")
+
+    st.video(uploaded_video)
+
+    st.markdown("---")
+
+# Traffic data
 traffic = {
     "NORTH": 3,
     "EAST": 4,
@@ -37,7 +51,7 @@ def green_time(count):
 
 priority = max(traffic, key=traffic.get)
 
-st.header("Traffic Analysis")
+st.header("📊 Traffic Analysis")
 
 col1, col2, col3, col4 = st.columns(4)
 
@@ -50,8 +64,14 @@ for col, side in zip(
             side,
             f"{traffic[side]} vehicles"
         )
-        st.write(f"Density: **{density(traffic[side])}**")
-        st.write(f"Green: **{green_time(traffic[side])} sec**")
+
+        st.write(
+            f"Density: **{density(traffic[side])}**"
+        )
+
+        st.write(
+            f"Green: **{green_time(traffic[side])} sec**"
+        )
 
 st.markdown("---")
 
