@@ -7,12 +7,22 @@ st.set_page_config(
 )
 
 # =====================================================
-# GREEN LOGIN BUTTON STYLE
+# BLACK BACKGROUND + GREEN LOGIN BUTTON
 # =====================================================
 
 st.markdown(
     """
     <style>
+
+    /* Entire page background */
+    .stApp {
+        background-color: #000000;
+    }
+
+    /* Main content */
+    .block-container {
+        padding-top: 0rem;
+    }
 
     /* Login button */
     div.stButton > button {
@@ -34,12 +44,36 @@ st.markdown(
         color: white;
     }
 
-    /* Center the traffic light */
+    /* Traffic logo */
     .traffic-logo {
         text-align: center;
         font-size: 90px;
         margin-top: 70px;
         margin-bottom: 25px;
+    }
+
+    /* Username and password labels */
+    label {
+        color: white !important;
+    }
+
+    /* Input text */
+    div[data-baseweb="input"] {
+        background-color: #1a1a1a !important;
+        border: 1px solid #444444 !important;
+    }
+
+    div[data-baseweb="input"] input {
+        color: white !important;
+    }
+
+    div[data-baseweb="input"] input::placeholder {
+        color: #aaaaaa !important;
+    }
+
+    /* Password eye icon */
+    div[data-baseweb="input"] svg {
+        color: white !important;
     }
 
     </style>
@@ -77,7 +111,7 @@ if not st.session_state.logged_in:
         """
         <h1 style="
             text-align:center;
-            color:#183047;
+            color:white;
             font-size:32px;
         ">
             Adaptive Traffic Signal
@@ -86,7 +120,7 @@ if not st.session_state.logged_in:
 
         <p style="
             text-align:center;
-            color:#526276;
+            color:#bbbbbb;
             font-size:17px;
             margin-bottom:35px;
         ">
@@ -134,11 +168,12 @@ if not st.session_state.logged_in:
             )
 
 
+    # Footer
     st.markdown(
         """
         <p style="
             text-align:center;
-            color:#526276;
+            color:#bbbbbb;
             margin-top:25px;
         ">
             👥 Smart Signals. Smooth Traffic. Safer Roads.
