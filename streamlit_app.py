@@ -7,7 +7,7 @@ import streamlit as st
 st.set_page_config(
     page_title="Adaptive Traffic Signal Control System",
     page_icon="🚦",
-    layout="centered"
+    layout="wide"
 )
 
 
@@ -19,24 +19,23 @@ st.markdown(
     """
     <style>
 
-    /* Black background */
     .stApp {
         background-color: #000000;
     }
 
     .block-container {
-        padding-top: 0rem;
+        padding-top: 1rem;
     }
 
-    /* Traffic light logo */
+    /* Login logo */
     .traffic-logo {
         text-align: center;
         font-size: 90px;
-        margin-top: 70px;
-        margin-bottom: 25px;
+        margin-top: 50px;
+        margin-bottom: 20px;
     }
 
-    /* All buttons */
+    /* Buttons */
     div.stButton > button {
         background-color: #20a464;
         color: white;
@@ -52,12 +51,12 @@ st.markdown(
         color: white;
     }
 
-    /* Username and password labels */
+    /* Labels */
     label {
         color: white !important;
     }
 
-    /* Input boxes */
+    /* Input */
     div[data-baseweb="input"] {
         background-color: #1a1a1a !important;
         border: 1px solid #444444 !important;
@@ -71,17 +70,9 @@ st.markdown(
         color: #aaaaaa !important;
     }
 
-    /* Password eye icon */
-    div[data-baseweb="input"] svg {
-        color: white !important;
-    }
-
-    /* Footer */
-    .login-footer {
-        text-align: center;
-        color: #bbbbbb;
-        margin-top: 25px;
-        font-size: 15px;
+    /* Dashboard text */
+    h1, h2, h3, p {
+        color: white;
     }
 
     </style>
@@ -104,10 +95,6 @@ if "logged_in" not in st.session_state:
 
 if not st.session_state.logged_in:
 
-    # -------------------------------------------------
-    # LOGO
-    # -------------------------------------------------
-
     st.markdown(
         """
         <div class="traffic-logo">
@@ -116,11 +103,6 @@ if not st.session_state.logged_in:
         """,
         unsafe_allow_html=True
     )
-
-
-    # -------------------------------------------------
-    # TITLE
-    # -------------------------------------------------
 
     st.markdown(
         """
@@ -145,42 +127,27 @@ if not st.session_state.logged_in:
         unsafe_allow_html=True
     )
 
-
-    # -------------------------------------------------
-    # USERNAME
-    # -------------------------------------------------
-
+    # Username
     username = st.text_input(
         "Username",
         placeholder="Enter username"
     )
 
-
-    # -------------------------------------------------
-    # PASSWORD
-    # -------------------------------------------------
-
+    # Password
     password = st.text_input(
         "Password",
         type="password",
         placeholder="Enter password"
     )
 
+    # Forgot password
+    col1, col2 = st.columns([4, 1])
 
-    # -------------------------------------------------
-    # SMALL FORGOT PASSWORD BUTTON
-    # -------------------------------------------------
-
-    forgot_col1, forgot_col2 = st.columns(
-        [4, 1]
-    )
-
-    with forgot_col2:
+    with col2:
 
         forgot = st.button(
             "Forgot Password?"
         )
-
 
     if forgot:
 
@@ -189,11 +156,7 @@ if not st.session_state.logged_in:
             "to reset your password."
         )
 
-
-    # -------------------------------------------------
-    # LOGIN BUTTON
-    # -------------------------------------------------
-
+    # Login
     if st.button(
         "LOGIN",
         use_container_width=True
@@ -214,16 +177,15 @@ if not st.session_state.logged_in:
                 "Invalid username or password"
             )
 
-
-    # -------------------------------------------------
-    # FOOTER
-    # -------------------------------------------------
-
     st.markdown(
         """
-        <div class="login-footer">
+        <p style="
+            text-align:center;
+            color:#bbbbbb;
+            margin-top:25px;
+        ">
             👥 Smart Signals. Smooth Traffic. Safer Roads.
-        </div>
+        </p>
         """,
         unsafe_allow_html=True
     )
@@ -232,30 +194,190 @@ if not st.session_state.logged_in:
 
 
 # =====================================================
-# AFTER LOGIN
+# DASHBOARD AFTER LOGIN
 # =====================================================
 
 st.markdown(
     """
     <h1 style="
-        color:white;
         text-align:center;
+        color:white;
     ">
         🚦 Adaptive Traffic Signal Control System
     </h1>
+
+    <p style="
+        text-align:center;
+        color:#bbbbbb;
+        font-size:18px;
+    ">
+        AI-Based Four-Way Traffic Management System
+    </p>
     """,
     unsafe_allow_html=True
 )
 
-st.success("Login successful!")
+st.markdown("---")
 
 
 # =====================================================
 # LOGOUT
 # =====================================================
 
-if st.button("Logout"):
+logout_col1, logout_col2 = st.columns([6, 1])
 
-    st.session_state.logged_in = False
+with logout_col2:
 
-    st.rerun()
+    if st.button("Logout"):
+
+        st.session_state.logged_in = False
+
+        st.rerun()
+
+
+# =====================================================
+# VIDEO UPLOAD
+# =====================================================
+
+st.header("🎥 Traffic Video")
+
+uploaded_video = st.file_uploader(
+    "Upload your traffic video",
+    type=["mp4", "avi", "mov"],
+    help="Upload the four-way traffic video for analysis."
+)
+
+
+# =====================================================
+# SHOW VIDEO
+# =====================================================
+
+if uploaded_video is not None:
+
+    st.success(
+        "Traffic video uploaded successfully!"
+    )
+
+    st.video(
+        uploaded_video
+    )
+
+
+# =====================================================
+# TRAFFIC ANALYSIS
+# =====================================================
+
+st.markdown("---")
+
+st.header("📊 Traffic Analysis")
+
+
+# Demo values
+traffic = {
+    "NORTH": 3,
+    "EAST": 4,
+    "SOUTH": 5,
+    "WEST": 2
+}
+
+green_times = {
+    "NORTH": 20,
+    "EAST": 30,
+    "SOUTH": 45,
+    "WEST": 10
+}
+
+
+# =====================================================
+# SIGNAL ORDER
+# =====================================================
+
+signal_order = sorted(
+    traffic,
+    key=traffic.get,
+    reverse=True
+)
+
+priority = signal_order[0]
+
+
+# =====================================================
+# WAITING + TOTAL
+# =====================================================
+
+waiting_times = {}
+total_times = {}
+
+current_wait = 0
+
+for direction in signal_order:
+
+    waiting_times[direction] = current_wait
+
+    total_times[direction] = (
+        current_wait
+        + green_times[direction]
+    )
+
+    current_wait += green_times[direction]
+
+
+# =====================================================
+# DISPLAY FOUR DIRECTIONS
+# =====================================================
+
+cols = st.columns(4)
+
+for col, direction in zip(
+    cols,
+    ["NORTH", "EAST", "SOUTH", "WEST"]
+):
+
+    with col:
+
+        st.subheader(
+            direction
+        )
+
+        st.write(
+            f"**Vehicles:** "
+            f"{traffic[direction]}"
+        )
+
+        st.write(
+            f"**Green Signal:** "
+            f"{green_times[direction]} sec"
+        )
+
+        st.write(
+            f"**Waiting Time:** "
+            f"{waiting_times[direction]} sec"
+        )
+
+        st.write(
+            f"**Total Time:** "
+            f"{total_times[direction]} sec"
+        )
+
+
+# =====================================================
+# SMART SIGNAL DECISION
+# =====================================================
+
+st.markdown("---")
+
+st.header(
+    "🚦 Smart Signal Decision"
+)
+
+st.success(
+    f"Priority: {priority} | "
+    f"Vehicles: {traffic[priority]} | "
+    f"Green Signal: "
+    f"{green_times[priority]} seconds"
+)
+
+st.info(
+    "The direction with the highest number "
+    "of vehicles receives priority."
+)
