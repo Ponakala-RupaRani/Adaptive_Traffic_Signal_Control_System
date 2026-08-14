@@ -1,27 +1,39 @@
 import streamlit as st
 
+# =====================================================
+# PAGE CONFIG
+# =====================================================
+
 st.set_page_config(
     page_title="Adaptive Traffic Signal Control System",
     page_icon="🚦",
     layout="centered"
 )
 
+
 # =====================================================
-# BLACK BACKGROUND + GREEN LOGIN BUTTON
+# CSS
 # =====================================================
 
 st.markdown(
     """
     <style>
 
-    /* Entire page background */
+    /* Black background */
     .stApp {
         background-color: #000000;
     }
 
-    /* Main content */
     .block-container {
         padding-top: 0rem;
+    }
+
+    /* Traffic light logo */
+    .traffic-logo {
+        text-align: center;
+        font-size: 90px;
+        margin-top: 70px;
+        margin-bottom: 25px;
     }
 
     /* Login button */
@@ -44,20 +56,12 @@ st.markdown(
         color: white;
     }
 
-    /* Traffic logo */
-    .traffic-logo {
-        text-align: center;
-        font-size: 90px;
-        margin-top: 70px;
-        margin-bottom: 25px;
-    }
-
-    /* Username and password labels */
+    /* Labels */
     label {
         color: white !important;
     }
 
-    /* Input text */
+    /* Input boxes */
     div[data-baseweb="input"] {
         background-color: #1a1a1a !important;
         border: 1px solid #444444 !important;
@@ -74,6 +78,23 @@ st.markdown(
     /* Password eye icon */
     div[data-baseweb="input"] svg {
         color: white !important;
+    }
+
+    /* Forgot password */
+    .forgot-text {
+        text-align: right;
+        color: #20a464;
+        font-size: 14px;
+        margin-top: -5px;
+        margin-bottom: 12px;
+    }
+
+    /* Footer */
+    .login-footer {
+        text-align: center;
+        color: #bbbbbb;
+        margin-top: 25px;
+        font-size: 15px;
     }
 
     </style>
@@ -96,7 +117,10 @@ if "logged_in" not in st.session_state:
 
 if not st.session_state.logged_in:
 
-    # Logo
+    # -------------------------------------------------
+    # LOGO
+    # -------------------------------------------------
+
     st.markdown(
         """
         <div class="traffic-logo">
@@ -106,7 +130,11 @@ if not st.session_state.logged_in:
         unsafe_allow_html=True
     )
 
-    # Title
+
+    # -------------------------------------------------
+    # TITLE
+    # -------------------------------------------------
+
     st.markdown(
         """
         <h1 style="
@@ -131,14 +159,20 @@ if not st.session_state.logged_in:
     )
 
 
-    # Username
+    # -------------------------------------------------
+    # USERNAME
+    # -------------------------------------------------
+
     username = st.text_input(
         "Username",
         placeholder="Enter username"
     )
 
 
-    # Password
+    # -------------------------------------------------
+    # PASSWORD
+    # -------------------------------------------------
+
     password = st.text_input(
         "Password",
         type="password",
@@ -146,7 +180,34 @@ if not st.session_state.logged_in:
     )
 
 
-    # Login button
+    # -------------------------------------------------
+    # FORGOT PASSWORD
+    # -------------------------------------------------
+
+    st.markdown(
+        """
+        <div class="forgot-text">
+            Forgot Password?
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    forgot = st.button(
+        "Forgot Password?"
+    )
+
+    if forgot:
+        st.info(
+            "Please contact the system administrator "
+            "to reset your password."
+        )
+
+
+    # -------------------------------------------------
+    # LOGIN
+    # -------------------------------------------------
+
     if st.button(
         "LOGIN",
         use_container_width=True
@@ -168,16 +229,15 @@ if not st.session_state.logged_in:
             )
 
 
-    # Footer
+    # -------------------------------------------------
+    # FOOTER
+    # -------------------------------------------------
+
     st.markdown(
         """
-        <p style="
-            text-align:center;
-            color:#bbbbbb;
-            margin-top:25px;
-        ">
+        <div class="login-footer">
             👥 Smart Signals. Smooth Traffic. Safer Roads.
-        </p>
+        </div>
         """,
         unsafe_allow_html=True
     )
@@ -189,13 +249,24 @@ if not st.session_state.logged_in:
 # AFTER LOGIN
 # =====================================================
 
-st.title(
-    "🚦 Adaptive Traffic Signal Control System"
+st.markdown(
+    """
+    <h1 style="
+        color:white;
+        text-align:center;
+    ">
+        🚦 Adaptive Traffic Signal Control System
+    </h1>
+    """,
+    unsafe_allow_html=True
 )
 
-st.success(
-    "Login successful!"
-)
+st.success("Login successful!")
+
+
+# =====================================================
+# LOGOUT
+# =====================================================
 
 if st.button("Logout"):
 
