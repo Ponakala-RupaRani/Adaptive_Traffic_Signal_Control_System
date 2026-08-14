@@ -44,11 +44,25 @@ Smart Traffic AI is a prototype system that analyzes traffic at a four-way inter
 
 ## 🛠️ Technologies
 
-- Python
-- OpenCV
-- YOLO
-- ByteTrack
-- Computer Vision
+### Technology Stack – Smart Traffic AI
+
+**Frontend**
+
+* **Streamlit** – Used to build the web dashboard/interface.
+* Displays:
+
+  * North, East, South, and West vehicle counts
+  * Traffic density
+  * Green signal timing
+  * Video upload and display
+
+**Backend**
+
+* **Python** – Main programming language used for traffic calculations and signal-control logic.
+* **YOLO (Ultralytics)** – Used for vehicle detection, including cars, motorcycles, buses, and trucks.
+* **OpenCV** – Used for video processing, reading video frames, and drawing bounding boxes.
+* **ByteTrack** – Used to track vehicles across multiple video frames and maintain consistent vehicle IDs.
+
 
 ## 📁 Project Files
 
