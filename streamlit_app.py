@@ -4,35 +4,33 @@ import base64
 st.set_page_config(
     page_title="Adaptive Traffic Signal Control System",
     page_icon="🚦",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="collapsed"
 )
 
-# =====================================================
+# =========================================================
 # LOGIN STATE
-# =====================================================
+# =========================================================
 
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
 
-# =====================================================
-# BACKGROUND IMAGE
-# =====================================================
+# =========================================================
+# LOAD LOGIN BACKGROUND
+# =========================================================
 
-def get_base64_image(path):
-
-    with open(path, "rb") as file:
-        return base64.b64encode(
-            file.read()
-        ).decode()
+def load_image(path):
+    with open(path, "rb") as f:
+        return base64.b64encode(f.read()).decode()
 
 
-bg_image = get_base64_image("login_bg.png")
+bg = load_image("login_bg.png")
 
 
-# =====================================================
+# =========================================================
 # LOGIN PAGE
-# =====================================================
+# =========================================================
 
 if not st.session_state.logged_in:
 
@@ -40,131 +38,162 @@ if not st.session_state.logged_in:
         f"""
         <style>
 
+        /* Remove Streamlit default spacing */
+        .block-container {{
+            padding-top: 0rem !important;
+            padding-bottom: 0rem !important;
+            max-width: 100% !important;
+        }}
+
+        [data-testid="stHeader"] {{
+            display: none;
+        }}
+
+        /* Full background */
         .stApp {{
-            background-image:
-                url("data:image/png;base64,{bg_image}");
+            background-image: url(
+                "data:image/png;base64,{bg}"
+            );
 
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
+
             min-height: 100vh;
         }}
 
-        [data-testid="stHeader"] {{
-            background: transparent;
+        /* White cover over the ORIGINAL form in image */
+        .login-cover {{
+            position: fixed;
+            top: 48%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+
+            width: 500px;
+            height: 390px;
+
+            background: rgba(255,255,255,0.98);
+
+            border-radius: 22px;
+
+            box-shadow:
+                0px 10px 35px
+                rgba(0,0,0,0.18);
+
+            z-index: 1;
         }}
 
-        .login-box {{
-            background: rgba(255,255,255,0.96);
-            padding: 35px;
-            border-radius: 20px;
-            box-shadow: 0px 8px 30px rgba(0,0,0,0.15);
-            margin-top: 180px;
+        /* Real Streamlit form */
+        .login-content {{
+            position: fixed;
+            top: 48%;
+            left: 50%;
+
+            transform: translate(-50%, -50%);
+
+            width: 430px;
+
+            z-index: 10;
         }}
 
-        .project-title {{
+        .login-heading {{
             text-align: center;
-            font-size: 38px;
+            font-size: 27px;
             font-weight: 700;
             color: #17324d;
-            margin-top: 50px;
-        }}
-
-        .subtitle {{
-            text-align: center;
-            font-size: 18px;
-            color: #5b6b7c;
+            margin-bottom: 20px;
         }}
 
         </style>
+
+        <div class="login-cover"></div>
         """,
         unsafe_allow_html=True
     )
 
-    # Space for the logo/title area in the image
+
+    # =====================================================
+    # REAL LOGIN FORM
+    # =====================================================
+
+    st.markdown(
+        '<div class="login-content">',
+        unsafe_allow_html=True
+    )
+
     st.markdown(
         """
-        <div class="project-title">
-            Adaptive Traffic Signal Control System
-        </div>
-
-        <div class="subtitle">
-            Smart Traffic Control for Smarter Cities
+        <div class="login-heading">
+            Login
         </div>
         """,
         unsafe_allow_html=True
     )
 
-    st.write("")
-
-    # Center login form
-    left, center, right = st.columns(
-        [1, 2, 1]
+    username = st.text_input(
+        "Username",
+        placeholder="Enter your username",
+        key="username"
     )
 
-    with center:
+    password = st.text_input(
+        "Password",
+        type="password",
+        placeholder="Enter your password",
+        key="password"
+    )
 
-        st.markdown(
-            '<div class="login-box">',
-            unsafe_allow_html=True
-        )
+    login_button = st.button(
+        "Login",
+        use_container_width=True
+    )
 
-        username = st.text_input(
-            "Username",
-            placeholder="Enter your username"
-        )
+    st.markdown(
+        """
+        <div style="
+            text-align:center;
+            margin-top:18px;
+            color:#5b6b7c;
+            font-size:15px;
+        ">
+            🚦 Smart Signals. Smooth Traffic. Safer Roads.
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
-        password = st.text_input(
-            "Password",
-            type="password",
-            placeholder="Enter your password"
-        )
+    st.markdown(
+        '</div>',
+        unsafe_allow_html=True
+    )
 
-        login = st.button(
-            "Login",
-            use_container_width=True
-        )
 
-        st.markdown(
-            """
-            <div style="
-                text-align:center;
-                margin-top:20px;
-                color:#5b6b7c;
-            ">
-                👥 Smart Signals. Smooth Traffic. Safer Roads.
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+    # =====================================================
+    # LOGIN CHECK
+    # =====================================================
 
-        st.markdown(
-            '</div>',
-            unsafe_allow_html=True
-        )
+    if login_button:
 
-        if login:
+        if (
+            username == "admin"
+            and password == "traffic123"
+        ):
 
-            if (
-                username == "admin"
-                and password == "traffic123"
-            ):
+            st.session_state.logged_in = True
+            st.rerun()
 
-                st.session_state.logged_in = True
-                st.rerun()
+        else:
 
-            else:
-
-                st.error(
-                    "Invalid username or password"
-                )
+            st.error(
+                "Invalid username or password"
+            )
 
     st.stop()
 
 
-# =====================================================
-# DASHBOARD
-# =====================================================
+# =========================================================
+# DASHBOARD AFTER LOGIN
+# =========================================================
 
 st.title(
     "🚦 Adaptive Traffic Signal Control System"
@@ -198,6 +227,11 @@ st.markdown("---")
 
 st.header("📊 Four-Way Traffic Status")
 
+
+# =========================================================
+# DEMO VALUES
+# =========================================================
+
 traffic = {
     "NORTH": 3,
     "EAST": 4,
@@ -212,16 +246,25 @@ green_times = {
     "WEST": 10
 }
 
+
+# Highest traffic gets first priority
+
 priority = max(
     traffic,
     key=traffic.get
 )
+
 
 signal_order = sorted(
     traffic,
     key=traffic.get,
     reverse=True
 )
+
+
+# =========================================================
+# WAITING TIME
+# =========================================================
 
 waiting = {}
 total = {}
@@ -239,6 +282,10 @@ for direction in signal_order:
 
     current_wait += green_times[direction]
 
+
+# =========================================================
+# DISPLAY
+# =========================================================
 
 cols = st.columns(4)
 
