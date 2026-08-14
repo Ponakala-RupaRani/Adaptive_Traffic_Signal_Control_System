@@ -38,6 +38,7 @@ if not st.session_state.logged_in:
     )
 
     if st.button("LOGIN", use_container_width=True):
+        button color=green
 
         if username == "admin" and password == "traffic123":
             st.session_state.logged_in = True
